@@ -9,22 +9,21 @@
   tools:ignore="UnusedAttribute"
 >
 
-  <!-- We need this permission, in order to make the screen on when playing video -->
+  <!-- Permission required to keep the screen on when playing video -->
   <uses-permission android:name="android.permission.WAKE_LOCK"/>
-
-  <!-- We need this permission, in order to access to Internet -->
+  <!-- Permission required to access to Internet -->
   <uses-permission android:name="android.permission.INTERNET"/>
-  <!-- We need this permission, because the "ConnectivityListener" component, the analytics and many ad SDKs require it -->
+  <!-- Permission required because the "ConnectivityListener" component, the analytics and many ad SDKs require it -->
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-  <!-- We need this permission, because we write on the SD card -->
+  <!-- Permission required to save data on the SD card -->
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-  <!-- Required for the push notifications, in case the 'vibrate' option is used -->
+  <!-- Permission required for push notifications that use the 'vibrate' option -->
   <uses-permission android:name="android.permission.VIBRATE"/>
-
+  <!-- Permission required to download push notification content -->
   <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
-  <!-- We need those permission, for the C2DM feature -->
+  <!-- Permission required for the GCM/C2DM (push notifications) -->
   <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
-  <!-- Required in order to be notified when the terminal boots, so that we can schedule a new content retrieval -->
+  <!-- Permission required to be notified when the device boots to schedule retrieval of new content -->
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
   <permission
     android:name="com.microsoft.azure.engagement.permission.C2D_MESSAGE"
@@ -41,7 +40,7 @@
     android:theme="@style/AppTheme"
   >
 
-    <!-- The Azure Mobile Engagement SDK will use the Google Cloud Messaging -->
+    <!-- The Azure Mobile Engagement SDK uses Google Cloud Messaging -->
     <meta-data
       android:name="engagement:gcm:sender"
       android:value="XXXXXXXXXXXX\n"
@@ -53,7 +52,7 @@
       android:value="icon"
     />
 
-    <!-- To enable or disable the Azure Mobile Engagement report crash -->
+    <!-- Enable (true) or disable (false) Azure Mobile Engagement crash reporting -->
     <meta-data
       android:name="engagement:reportCrash"
       android:value="true"
@@ -166,7 +165,6 @@
           android:pathPrefix="/rebound"
         />
       </intent-filter>
-
     </activity>
 
     <activity

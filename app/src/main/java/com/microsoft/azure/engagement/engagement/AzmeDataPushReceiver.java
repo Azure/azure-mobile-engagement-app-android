@@ -11,27 +11,24 @@ import android.util.Log;
 import com.microsoft.azure.engagement.reach.EngagementReachDataPushReceiver;
 
 public final class AzmeDataPushReceiver
-    extends EngagementReachDataPushReceiver
-{
+        extends EngagementReachDataPushReceiver {
 
-  public static final String PROMOTION_DATA_PUSH_BODY_PREFERENCE_KEY = "promotionDataPushBodyPreferenceKey";
+    public static final String PROMOTION_DATA_PUSH_BODY_PREFERENCE_KEY = "promotionDataPushBodyPreferenceKey";
 
-  @Override
-  protected Boolean onDataPushStringReceived(Context context, String category, String body)
-  {
-    Log.d("tmp", "String data push message received: " + body);
+    @Override
+    protected Boolean onDataPushStringReceived(Context context, String category, String body) {
+        Log.d("tmp", "String data push message received: " + body);
 
-    final SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-    defaultSharedPreferences.edit().putString(AzmeDataPushReceiver.PROMOTION_DATA_PUSH_BODY_PREFERENCE_KEY, body).apply();
+        final SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        defaultSharedPreferences.edit().putString(AzmeDataPushReceiver.PROMOTION_DATA_PUSH_BODY_PREFERENCE_KEY, body).apply();
 
-    return true;
-  }
+        return true;
+    }
 
-  @Override
-  protected Boolean onDataPushBase64Received(Context context, String category, byte[] decodedBody, String encodedBody)
-  {
-    Log.d("tmp", "Base64 data push message received: " + encodedBody);
-    // Do something useful with decodedBody like updating an image view
-    return true;
-  }
+    @Override
+    protected Boolean onDataPushBase64Received(Context context, String category, byte[] decodedBody, String encodedBody) {
+        Log.d("tmp", "Base64 data push message received: " + encodedBody);
+        // Do something useful with decodedBody like updating an image view
+        return true;
+    }
 }

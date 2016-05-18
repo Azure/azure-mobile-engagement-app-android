@@ -36,173 +36,150 @@ import com.microsoft.azure.engagement.utils.CustomTabsHelper.ServiceConnectionCa
  * This is a helper class to manage the connection to the Custom Tabs Service.
  */
 public final class CustomTabActivityHelper
-    implements ServiceConnectionCallback
-{
+        implements ServiceConnectionCallback {
 
-  private static final String TAG = CustomTabActivityHelper.class.getSimpleName();
+    private static final String TAG = CustomTabActivityHelper.class.getSimpleName();
 
-  private CustomTabsSession customTabsSession;
+    private CustomTabsSession customTabsSession;
 
-  private CustomTabsClient client;
+    private CustomTabsClient client;
 
-  private CustomTabsServiceConnection connection;
+    private CustomTabsServiceConnection connection;
 
-  private ConnectionCallback connectionCallback;
-
-  /**
-   * Opens the URL on a Custom Tab if possible. Otherwise fallsback to opening it on a WebView.
-   *
-   * @param activity   The host activity.
-   * @param uri        The Uri to be opened.
-   * @param eventName  The tracking eventName.
-   * @param eventTitle The tracking eventTitle.
-   * @param eventUrl   The tracking eventUrl.
-   */
-  public static final void openCustomTab(Activity activity, Uri uri, String eventName, String eventTitle,
-      String eventUrl)
-  {
-    try
-    {
-      final String packageName = CustomTabsHelper.getPackageNameToUse(activity);
-      final CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-      builder.setToolbarColor(ContextCompat.getColor(activity, R.color.customTabColor));
-      builder.enableUrlBarHiding();
-      builder.setCloseButtonIcon(BitmapFactory.decodeResource(activity.getResources(), R.drawable.ic_arrow_back));
-      builder.setStartAnimations(activity, R.anim.slide_in_right, R.anim.slide_out_left);
-      builder.setExitAnimations(activity, android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-      final CustomTabsIntent customTabsIntent = builder.build();
-      customTabsIntent.intent.setPackage(packageName);
-      customTabsIntent.launchUrl(activity, uri);
-
-      AzmeTracker.sendEventForCustomTab(activity, eventName, eventTitle, eventUrl);
-    }
-    catch (Exception exception)
-    {
-      Log.w(CustomTabActivityHelper.TAG, "Cannot launch the uri '" + uri + "'");
-    }
-  }
-
-  /**
-   * Unbinds the Activity from the Custom Tabs Service.
-   *
-   * @param activity the activity that is connected to the service.
-   */
-  public final void unbindCustomTabsService(Activity activity)
-  {
-    if (connection == null)
-    {
-      return;
-    }
-    activity.unbindService(connection);
-    client = null;
-    customTabsSession = null;
-    connection = null;
-  }
-
-  /**
-   * Creates or retrieves an exiting CustomTabsSession.
-   *
-   * @return a CustomTabsSession.
-   */
-  private CustomTabsSession getSession()
-  {
-    if (client == null)
-    {
-      customTabsSession = null;
-    }
-    else if (customTabsSession == null)
-    {
-      customTabsSession = client.newSession(null);
-    }
-    return customTabsSession;
-  }
-
-  /**
-   * Register a Callback to be called when connected or disconnected from the Custom Tabs Service.
-   *
-   * @param connectionCallback The connectionCallback
-   */
-  public final void setConnectionCallback(ConnectionCallback connectionCallback)
-  {
-    this.connectionCallback = connectionCallback;
-  }
-
-  /**
-   * Binds the Activity to the Custom Tabs Service.
-   *
-   * @param activity the activity to be binded to the service.
-   */
-  public final void bindCustomTabsService(Activity activity)
-  {
-    if (client != null)
-    {
-      return;
-    }
-
-    final String packageName = CustomTabsHelper.getPackageNameToUse(activity);
-    if (packageName == null)
-    {
-      return;
-    }
-
-    connection = new ServiceConnection(this);
-    CustomTabsClient.bindCustomTabsService(activity, packageName, connection);
-  }
-
-  /**
-   * @return true if call to mayLaunchUrl was accepted.
-   * @see {@link CustomTabsSession#mayLaunchUrl(Uri, Bundle, List)}.
-   */
-  public final boolean mayLaunchUrl(Uri uri, Bundle extras, List<Bundle> otherLikelyBundles)
-  {
-    if (client == null)
-    {
-      return false;
-    }
-
-    CustomTabsSession session = getSession();
-
-    return session != null && session.mayLaunchUrl(uri, extras, otherLikelyBundles);
-  }
-
-  @Override
-  public void onServiceConnected(CustomTabsClient client)
-  {
-    this.client = client;
-    this.client.warmup(0L);
-    if (connectionCallback != null)
-    {
-      connectionCallback.onCustomTabsConnected();
-    }
-  }
-
-  @Override
-  public void onServiceDisconnected()
-  {
-    client = null;
-    customTabsSession = null;
-    if (connectionCallback != null)
-    {
-      connectionCallback.onCustomTabsDisconnected();
-    }
-  }
-
-  /**
-   * A Callback for when the service is connected or disconnected. Use those callbacks to
-   * handle UI changes when the service is connected or disconnected.
-   */
-  public interface ConnectionCallback
-  {
+    private ConnectionCallback connectionCallback;
 
     /**
-     * Called when the service is connected.
+     * Opens the URL on a Custom Tab if possible. Otherwise fallsback to opening it on a WebView.
+     *
+     * @param activity   The host activity.
+     * @param uri        The Uri to be opened.
+     * @param eventName  The tracking eventName.
+     * @param eventTitle The tracking eventTitle.
+     * @param eventUrl   The tracking eventUrl.
      */
-    void onCustomTabsConnected();
+    public static final void openCustomTab(Activity activity, Uri uri, String eventName, String eventTitle,
+                                           String eventUrl) {
+        try {
+            final String packageName = CustomTabsHelper.getPackageNameToUse(activity);
+            final CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+            builder.setToolbarColor(ContextCompat.getColor(activity, R.color.customTabColor));
+            builder.enableUrlBarHiding();
+            builder.setCloseButtonIcon(BitmapFactory.decodeResource(activity.getResources(), R.drawable.ic_arrow_back));
+            builder.setStartAnimations(activity, R.anim.slide_in_right, R.anim.slide_out_left);
+            builder.setExitAnimations(activity, android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+            final CustomTabsIntent customTabsIntent = builder.build();
+            customTabsIntent.intent.setPackage(packageName);
+            customTabsIntent.launchUrl(activity, uri);
+
+            AzmeTracker.sendEventForCustomTab(activity, eventName, eventTitle, eventUrl);
+        } catch (Exception exception) {
+            Log.w(CustomTabActivityHelper.TAG, "Cannot launch the uri '" + uri + "'");
+        }
+    }
 
     /**
-     * Called when the service is disconnected.
+     * Unbinds the Activity from the Custom Tabs Service.
+     *
+     * @param activity the activity that is connected to the service.
      */
-    void onCustomTabsDisconnected();
-  }
+    public final void unbindCustomTabsService(Activity activity) {
+        if (connection == null) {
+            return;
+        }
+        activity.unbindService(connection);
+        client = null;
+        customTabsSession = null;
+        connection = null;
+    }
 
+    /**
+     * Creates or retrieves an exiting CustomTabsSession.
+     *
+     * @return a CustomTabsSession.
+     */
+    private CustomTabsSession getSession() {
+        if (client == null) {
+            customTabsSession = null;
+        } else if (customTabsSession == null) {
+            customTabsSession = client.newSession(null);
+        }
+        return customTabsSession;
+    }
+
+    /**
+     * Register a Callback to be called when connected or disconnected from the Custom Tabs Service.
+     *
+     * @param connectionCallback The connectionCallback
+     */
+    public final void setConnectionCallback(ConnectionCallback connectionCallback) {
+        this.connectionCallback = connectionCallback;
+    }
+
+    /**
+     * Binds the Activity to the Custom Tabs Service.
+     *
+     * @param activity the activity to be binded to the service.
+     */
+    public final void bindCustomTabsService(Activity activity) {
+        if (client != null) {
+            return;
+        }
+
+        final String packageName = CustomTabsHelper.getPackageNameToUse(activity);
+        if (packageName == null) {
+            return;
+        }
+
+        connection = new ServiceConnection(this);
+        CustomTabsClient.bindCustomTabsService(activity, packageName, connection);
+    }
+
+    /**
+     * @return true if call to mayLaunchUrl was accepted.
+     * @see {@link CustomTabsSession#mayLaunchUrl(Uri, Bundle, List)}.
+     */
+    public final boolean mayLaunchUrl(Uri uri, Bundle extras, List<Bundle> otherLikelyBundles) {
+        if (client == null) {
+            return false;
+        }
+
+        CustomTabsSession session = getSession();
+
+        return session != null && session.mayLaunchUrl(uri, extras, otherLikelyBundles);
+    }
+
+    @Override
+    public void onServiceConnected(CustomTabsClient client) {
+        this.client = client;
+        this.client.warmup(0L);
+        if (connectionCallback != null) {
+            connectionCallback.onCustomTabsConnected();
+        }
+    }
+
+    @Override
+    public void onServiceDisconnected() {
+        client = null;
+        customTabsSession = null;
+        if (connectionCallback != null) {
+            connectionCallback.onCustomTabsDisconnected();
+        }
+    }
+
+    /**
+     * A Callback for when the service is connected or disconnected. Use those callbacks to
+     * handle UI changes when the service is connected or disconnected.
+     */
+    public interface ConnectionCallback {
+
+        /**
+         * Called when the service is connected.
+         */
+        void onCustomTabsConnected();
+
+        /**
+         * Called when the service is disconnected.
+         */
+        void onCustomTabsDisconnected();
+    }
 }

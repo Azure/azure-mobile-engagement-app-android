@@ -4,13 +4,10 @@
 package com.microsoft.azure.engagement;
 
 public final class RecentProductUpdatesActivity
-    extends AbstractAzmeActivity
-{
+        extends AbstractAzmeActivity {
 
-  @Override
-  public int getLayoutResourceId()
-  {
-    return R.layout.activity_recent_product_updates;
-  }
-
+    @Override
+    public int getLayoutResourceId() {
+        return R.layout.activity_recent_product_updates;
+    }
 }

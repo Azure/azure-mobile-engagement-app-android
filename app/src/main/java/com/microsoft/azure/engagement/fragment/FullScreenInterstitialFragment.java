@@ -20,58 +20,50 @@ import com.microsoft.azure.engagement.ReboundFullScreenInterstitialActivity;
 import com.microsoft.azure.engagement.engagement.AzmeTracker;
 
 public final class FullScreenInterstitialFragment
-    extends Fragment
-    implements OnClickListener, NavigationProvider
-{
+        extends Fragment
+        implements OnClickListener, NavigationProvider {
 
-  private View fullInterstitialButton;
+    private View fullInterstitialButton;
 
-  private View footer;
+    private View footer;
 
-  @Nullable
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-  {
-    final View view = inflater.inflate(R.layout.fragment_full_screen_interstitial, container, false);
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.fragment_full_screen_interstitial, container, false);
 
-    fullInterstitialButton = view.findViewById(R.id.fullInterstitialButton);
-    footer = view.findViewById(R.id.footer);
-    fullInterstitialButton.setOnClickListener(this);
-    footer.setOnClickListener(this);
+        fullInterstitialButton = view.findViewById(R.id.fullInterstitialButton);
+        footer = view.findViewById(R.id.footer);
+        fullInterstitialButton.setOnClickListener(this);
+        footer.setOnClickListener(this);
 
-    AzmeTracker.startActivity(getActivity(), "notification_full_interstitial");
+        AzmeTracker.startActivity(getActivity(), "notification_full_interstitial");
 
-    return view;
-  }
-
-  @Override
-  public void onClick(View view)
-  {
-    if (view == fullInterstitialButton)
-    {
-      final Intent intent = new Intent(getActivity(), ReboundFullScreenInterstitialActivity.class);
-      intent.putExtra(ReboundFullScreenInterstitialActivity.ACTION_URL_EXTRA, getString(R.string.deeplink_interstitial));
-      startActivity(intent);
-
-      AzmeTracker.sendEvent(getActivity(), "display_full_interstitial");
+        return view;
     }
-    else if (view == footer)
-    {
-      final Intent intent = new Intent(getActivity(), HowToSendNotificationActivity.class);
-      intent.putExtra(HowToSendNotificationActivity.NOTIFICATION_TYPE_EXTRA, NotificationType.fullScreenInterstitial);
-      startActivity(intent);
+
+    @Override
+    public void onClick(View view) {
+        if (view == fullInterstitialButton) {
+            final Intent intent = new Intent(getActivity(), ReboundFullScreenInterstitialActivity.class);
+            intent.putExtra(ReboundFullScreenInterstitialActivity.ACTION_URL_EXTRA, getString(R.string.deeplink_interstitial));
+            startActivity(intent);
+
+            AzmeTracker.sendEvent(getActivity(), "display_full_interstitial");
+        } else if (view == footer) {
+            final Intent intent = new Intent(getActivity(), HowToSendNotificationActivity.class);
+            intent.putExtra(HowToSendNotificationActivity.NOTIFICATION_TYPE_EXTRA, NotificationType.fullScreenInterstitial);
+            startActivity(intent);
+        }
     }
-  }
 
-  @Override
-  public int getMenuIdentifier()
-  {
-    return R.id.menu_full_screen;
-  }
+    @Override
+    public int getMenuIdentifier() {
+        return R.id.menu_full_screen;
+    }
 
-  @Override
-  public int getTitleIdentifier()
-  {
-    return R.string.menu_full_screen_title;
-  }
+    @Override
+    public int getTitleIdentifier() {
+        return R.string.menu_full_screen_title;
+    }
 }

@@ -21,58 +21,50 @@ import com.microsoft.azure.engagement.ReboundFullScreenInterstitialActivity;
 import com.microsoft.azure.engagement.engagement.AzmeTracker;
 
 public final class WebAnnouncementFragment
-    extends Fragment
-    implements OnClickListener, NavigationProvider
-{
+        extends Fragment
+        implements OnClickListener, NavigationProvider {
 
-  private View webAnnouncementButton;
+    private View webAnnouncementButton;
 
-  private View footer;
+    private View footer;
 
-  @Nullable
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-  {
-    final View view = inflater.inflate(R.layout.fragment_web_announcement, container, false);
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.fragment_web_announcement, container, false);
 
-    webAnnouncementButton = view.findViewById(R.id.webAnnouncementButton);
-    footer = view.findViewById(R.id.footer);
-    webAnnouncementButton.setOnClickListener(this);
-    footer.setOnClickListener(this);
+        webAnnouncementButton = view.findViewById(R.id.webAnnouncementButton);
+        footer = view.findViewById(R.id.footer);
+        webAnnouncementButton.setOnClickListener(this);
+        footer.setOnClickListener(this);
 
-    AzmeTracker.startActivity(getActivity(), "notification_web_announcement");
+        AzmeTracker.startActivity(getActivity(), "notification_web_announcement");
 
-    return view;
-  }
-
-  @Override
-  public void onClick(View view)
-  {
-    if (view == webAnnouncementButton)
-    {
-      final Intent intent = new Intent(getActivity(), ReboundFullScreenInterstitialActivity.class);
-      intent.putExtra(ReboundFullScreenInterstitialActivity.ACTION_URL_EXTRA, getString(R.string.deeplink_interstitial));
-      ((AbstractAzmeActivity) getActivity()).showInAppNotification(getString(R.string.full_screen_interstitial_dialog_announcement_title), getString(R.string.full_screen_interstitial_dialog_announcement_message), intent);
-
-      AzmeTracker.sendEvent(getActivity(), "display_web_announcement");
+        return view;
     }
-    else if (view == footer)
-    {
-      final Intent intent = new Intent(getActivity(), HowToSendNotificationActivity.class);
-      intent.putExtra(HowToSendNotificationActivity.NOTIFICATION_TYPE_EXTRA, NotificationType.webAnnouncement);
-      startActivity(intent);
+
+    @Override
+    public void onClick(View view) {
+        if (view == webAnnouncementButton) {
+            final Intent intent = new Intent(getActivity(), ReboundFullScreenInterstitialActivity.class);
+            intent.putExtra(ReboundFullScreenInterstitialActivity.ACTION_URL_EXTRA, getString(R.string.deeplink_interstitial));
+            ((AbstractAzmeActivity) getActivity()).showInAppNotification(getString(R.string.full_screen_interstitial_dialog_announcement_title), getString(R.string.full_screen_interstitial_dialog_announcement_message), intent);
+
+            AzmeTracker.sendEvent(getActivity(), "display_web_announcement");
+        } else if (view == footer) {
+            final Intent intent = new Intent(getActivity(), HowToSendNotificationActivity.class);
+            intent.putExtra(HowToSendNotificationActivity.NOTIFICATION_TYPE_EXTRA, NotificationType.webAnnouncement);
+            startActivity(intent);
+        }
     }
-  }
 
-  @Override
-  public int getMenuIdentifier()
-  {
-    return R.id.menu_web_announcement;
-  }
+    @Override
+    public int getMenuIdentifier() {
+        return R.id.menu_web_announcement;
+    }
 
-  @Override
-  public int getTitleIdentifier()
-  {
-    return R.string.menu_web_announcement_title;
-  }
+    @Override
+    public int getTitleIdentifier() {
+        return R.string.menu_web_announcement_title;
+    }
 }
