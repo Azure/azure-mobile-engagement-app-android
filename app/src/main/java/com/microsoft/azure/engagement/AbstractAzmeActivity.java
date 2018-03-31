@@ -83,6 +83,20 @@ public abstract class AbstractAzmeActivity
   }
 
   @Override
+  protected void onStop()
+  {
+    super.onStop();
+    EngagementAgent.getInstance(this).endActivity();
+  }
+
+  @Override
+  protected void onDestroy()
+  {
+    super.onDestroy();
+    EngagementAgent.getInstance(this).endActivity();
+  }
+
+  @Override
   public void onClick(View view)
   {
     if (view == engagementNotificationCloseImageButton)
