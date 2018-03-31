@@ -15,138 +15,117 @@ import com.microsoft.azure.engagement.reach.EngagementAnnouncement;
 import com.microsoft.azure.engagement.reach.EngagementReachAgent;
 
 public abstract class AbstractAzmeActivity
-    extends AppCompatActivity
-    implements OnClickListener
-{
+        extends AppCompatActivity
+        implements OnClickListener {
 
-  private View engagementNotificationOverlay;
+    private View engagementNotificationOverlay;
+    private View engagementNotificationArea;
+    private TextView engagementNotificationTitleTextView;
+    private TextView engagementNotificationMessageTextView;
+    private View engagementNotificationCloseImageButton;
 
-  private View engagementNotificationArea;
+    /**
+     * Abstract method
+     *
+     * @return The activity layout resource id
+     */
+    protected abstract int getLayoutResourceId();
 
-  private TextView engagementNotificationTitleTextView;
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(getLayoutResourceId());
 
-  private TextView engagementNotificationMessageTextView;
+        engagementNotificationOverlay = findViewById(R.id.engagement_notification_overlay);
+        engagementNotificationArea = findViewById(R.id.engagement_notification_area);
+        engagementNotificationTitleTextView = (TextView) findViewById(R.id.engagement_notification_title);
+        engagementNotificationMessageTextView = (TextView) findViewById(R.id.engagement_notification_message);
+        engagementNotificationCloseImageButton = findViewById(R.id.engagement_notification_close);
 
-  private View engagementNotificationCloseImageButton;
-
-  /**
-   * Abstract method
-   *
-   * @return The activity layout resource id
-   */
-  protected abstract int getLayoutResourceId();
-
-  @Override
-  protected void onCreate(final Bundle savedInstanceState)
-  {
-    super.onCreate(savedInstanceState);
-    setContentView(getLayoutResourceId());
-
-    engagementNotificationOverlay = findViewById(R.id.engagement_notification_overlay);
-    engagementNotificationArea = findViewById(R.id.engagement_notification_area);
-    engagementNotificationTitleTextView = (TextView) findViewById(R.id.engagement_notification_title);
-    engagementNotificationMessageTextView = (TextView) findViewById(R.id.engagement_notification_message);
-    engagementNotificationCloseImageButton = findViewById(R.id.engagement_notification_close);
-
-    engagementNotificationCloseImageButton.setOnClickListener(this);
-  }
-
-  @Override
-  protected void onPostCreate(Bundle savedInstanceState)
-  {
-    if (EngagementAgentUtils.isInDedicatedEngagementProcess(this))
-    {
-      return;
+        engagementNotificationCloseImageButton.setOnClickListener(this);
     }
-    super.onPostCreate(savedInstanceState);
-  }
 
-  @Override
-  protected void onResume()
-  {
-    super.onResume();
-    final String activityNameOnEngagement = EngagementAgentUtils.buildEngagementActivityName(getClass());
-    EngagementAgent.getInstance(this).startActivity(this, activityNameOnEngagement, null);
-
-    final EngagementAnnouncement engagementAnnouncement = EngagementReachAgent.getInstance(this).getContent(getIntent());
-    if (engagementAnnouncement != null)
-    {
-      engagementAnnouncement.exitContent(this);
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        if (EngagementAgentUtils.isInDedicatedEngagementProcess(this)) {
+            return;
+        }
+        super.onPostCreate(savedInstanceState);
     }
-  }
 
-  @Override
-  protected void onPause()
-  {
-    super.onPause();
-    EngagementAgent.getInstance(this).endActivity();
-  }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        final String activityNameOnEngagement = EngagementAgentUtils.buildEngagementActivityName(getClass());
+        EngagementAgent.getInstance(this).startActivity(this, activityNameOnEngagement, null);
 
-  @Override
-  public void onClick(View view)
-  {
-    if (view == engagementNotificationCloseImageButton)
-    {
-      hideNotificationOverlay();
+        final EngagementAnnouncement engagementAnnouncement = EngagementReachAgent.getInstance(this).getContent(getIntent());
+        if (engagementAnnouncement != null) {
+            engagementAnnouncement.exitContent(this);
+        }
     }
-  }
 
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item)
-  {
-    // Handle item selection
-    switch (item.getItemId())
-    {
-    case android.R.id.home:
-      finish();
-      return true;
-    default:
-      return super.onOptionsItemSelected(item);
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EngagementAgent.getInstance(this).endActivity();
     }
-  }
 
-  /**
-   * Method that shows the in-app notification area in a local mode
-   *
-   * @param title   The title to show
-   * @param message The message to show
-   * @param intent  The intent to start
-   */
-  public final void showInAppNotification(String title, String message, final Intent intent)
-  {
-    engagementNotificationTitleTextView.setText(title);
-    engagementNotificationMessageTextView.setText(message);
-    engagementNotificationArea.setOnClickListener(new OnClickListener()
-    {
-      @Override
-      public void onClick(View v)
-      {
-        startActivity(intent);
-        hideNotificationOverlay();
-      }
-    });
-    engagementNotificationArea.setVisibility(View.VISIBLE);
-    engagementNotificationOverlay.setVisibility(View.VISIBLE);
-  }
-
-  /**
-   * Method that hides the notification overlay
-   */
-  final void hideNotificationOverlay()
-  {
-    if (inAppNotificationIsShown() == true)
-    {
-      engagementNotificationOverlay.setVisibility(View.GONE);
+    @Override
+    public void onClick(View view) {
+        if (view == engagementNotificationCloseImageButton) {
+            hideNotificationOverlay();
+        }
     }
-  }
 
-  /**
-   * Method that returns true if an in-app is shown
-   *
-   * @return The visibility state of the notification overlay view
-   */
-  final boolean inAppNotificationIsShown()
-  {
-    return (engagementNotificationOverlay != null && engagementNotificationOverlay.getVisibility() == View.VISIBLE);
-  }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Method that shows the in-app notification area in a local mode
+     *
+     * @param title   The title to show
+     * @param message The message to show
+     * @param intent  The intent to start
+     */
+    public final void showInAppNotification(String title, String message, final Intent intent) {
+        engagementNotificationTitleTextView.setText(title);
+        engagementNotificationMessageTextView.setText(message);
+        engagementNotificationArea.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(intent);
+                hideNotificationOverlay();
+            }
+        });
+        engagementNotificationArea.setVisibility(View.VISIBLE);
+        engagementNotificationOverlay.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Method that hides the notification overlay
+     */
+    final void hideNotificationOverlay() {
+        if (inAppNotificationIsShown() == true) {
+            engagementNotificationOverlay.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * Method that returns true if an in-app is shown
+     *
+     * @return The visibility state of the notification overlay view
+     */
+    final boolean inAppNotificationIsShown() {
+        return (engagementNotificationOverlay != null && engagementNotificationOverlay.getVisibility() == View.VISIBLE);
+    }
 }

@@ -23,119 +23,97 @@ import com.microsoft.azure.engagement.R;
 import com.microsoft.azure.engagement.engagement.AzmeTracker;
 
 public final class GetDeviceIdFragment
-    extends Fragment
-    implements View.OnClickListener, NavigationProvider
-{
+        extends Fragment
+        implements View.OnClickListener, NavigationProvider {
 
-  private static final String TAG = GetDeviceIdFragment.class.getSimpleName();
+    private static final String TAG = GetDeviceIdFragment.class.getSimpleName();
+    private View shareButton;
+    private View copyButton;
+    private String deviceId;
 
-  private View shareButton;
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.fragment_get_device_id, container, false);
 
-  private View copyButton;
+        // getting the Device ID
+        EngagementAgent.getInstance(getActivity()).getDeviceId(new Callback<String>() {
+            @Override
+            public void onResult(String deviceId) {
+                GetDeviceIdFragment.this.deviceId = deviceId;
+            }
+        });
 
-  private String deviceId;
+        shareButton = view.findViewById(R.id.shareButton);
+        copyButton = view.findViewById(R.id.copyButton);
 
-  @Nullable
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-  {
-    final View view = inflater.inflate(R.layout.fragment_get_device_id, container, false);
+        shareButton.setOnClickListener(this);
+        copyButton.setOnClickListener(this);
 
-    // getting the Device ID
-    EngagementAgent.getInstance(getActivity()).getDeviceId(new Callback<String>()
-    {
-      @Override
-      public void onResult(String deviceId)
-      {
-        GetDeviceIdFragment.this.deviceId = deviceId;
-      }
-    });
+        AzmeTracker.startActivity(getActivity(), "get_device_id");
 
-    shareButton = view.findViewById(R.id.shareButton);
-    copyButton = view.findViewById(R.id.copyButton);
-
-    shareButton.setOnClickListener(this);
-    copyButton.setOnClickListener(this);
-
-    AzmeTracker.startActivity(getActivity(), "get_device_id");
-
-    return view;
-  }
-
-  @Override
-  public void onClick(View view)
-  {
-    switch (view.getId())
-    {
-    case R.id.shareButton:
-      shareDeviceID();
-      break;
-
-    case R.id.copyButton:
-      copyDeviceID();
-      break;
-    }
-  }
-
-  @Override
-  public int getMenuIdentifier()
-  {
-    return R.id.menu_get_device_id;
-  }
-
-  @Override
-  public int getTitleIdentifier()
-  {
-    return R.string.menu_get_device_id_title;
-  }
-
-
-  /**
-   * Method that shares the device id
-   *
-   */
-  private final void shareDeviceID()
-  {
-    if (deviceId != null)
-    {
-      final Intent intent = new Intent();
-      intent.setAction(Intent.ACTION_SEND);
-      intent.setType("text/plain");
-      intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.get_the_device_id_share_object));
-      intent.putExtra(Intent.EXTRA_TEXT, deviceId);
-      startActivity(intent);
-
-      Log.d(GetDeviceIdFragment.TAG, "Intent share started");
-    }
-    else
-    {
-      Log.w(GetDeviceIdFragment.TAG, "Device ID is null");
+        return view;
     }
 
-    AzmeTracker.sendEvent(getActivity(), "share_device_id");
-  }
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.shareButton:
+                shareDeviceID();
+                break;
 
-  /**
-   * Method that copies the device id
-   *
-   */
-  private final void copyDeviceID()
-  {
-    if (deviceId != null)
-    {
-      final ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Activity.CLIPBOARD_SERVICE);
-      final ClipData clip = ClipData.newPlainText("label", deviceId);
-      clipboard.setPrimaryClip(clip);
-      Toast.makeText(getActivity(), getString(R.string.get_the_device_id_copy_success_message, deviceId), Toast.LENGTH_LONG).show();
-
-      Log.d(GetDeviceIdFragment.TAG, "String Device ID copied " + deviceId);
-    }
-    else
-    {
-      Log.w(GetDeviceIdFragment.TAG, "Device ID is null");
+            case R.id.copyButton:
+                copyDeviceID();
+                break;
+        }
     }
 
-    AzmeTracker.sendEvent(getActivity(), "copy_device_id");
-  }
+    @Override
+    public int getMenuIdentifier() {
+        return R.id.menu_get_device_id;
+    }
 
+    @Override
+    public int getTitleIdentifier() {
+        return R.string.menu_get_device_id_title;
+    }
+
+
+    /**
+     * Method that shares the device id
+     */
+    private final void shareDeviceID() {
+        if (deviceId != null) {
+            final Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.get_the_device_id_share_object));
+            intent.putExtra(Intent.EXTRA_TEXT, deviceId);
+            startActivity(intent);
+
+            Log.d(GetDeviceIdFragment.TAG, "Intent share started");
+        } else {
+            Log.w(GetDeviceIdFragment.TAG, "Device ID is null");
+        }
+
+        AzmeTracker.sendEvent(getActivity(), "share_device_id");
+    }
+
+    /**
+     * Method that copies the device id
+     */
+    private final void copyDeviceID() {
+        if (deviceId != null) {
+            final ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Activity.CLIPBOARD_SERVICE);
+            final ClipData clip = ClipData.newPlainText("label", deviceId);
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(getActivity(), getString(R.string.get_the_device_id_copy_success_message, deviceId), Toast.LENGTH_LONG).show();
+
+            Log.d(GetDeviceIdFragment.TAG, "String Device ID copied " + deviceId);
+        } else {
+            Log.w(GetDeviceIdFragment.TAG, "Device ID is null");
+        }
+
+        AzmeTracker.sendEvent(getActivity(), "copy_device_id");
+    }
 }

@@ -21,58 +21,50 @@ import com.microsoft.azure.engagement.R;
 import com.microsoft.azure.engagement.engagement.AzmeTracker;
 
 public final class PollFragment
-    extends Fragment
-    implements OnClickListener, NavigationProvider
-{
+        extends Fragment
+        implements OnClickListener, NavigationProvider {
 
-  private View pollNotificationButton;
+    private View pollNotificationButton;
 
-  private View footer;
+    private View footer;
 
-  @Nullable
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-  {
-    final View view = inflater.inflate(R.layout.fragment_poll, container, false);
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.fragment_poll, container, false);
 
-    pollNotificationButton = view.findViewById(R.id.pollNotificationButton);
-    footer = view.findViewById(R.id.footer);
+        pollNotificationButton = view.findViewById(R.id.pollNotificationButton);
+        footer = view.findViewById(R.id.footer);
 
-    pollNotificationButton.setOnClickListener(this);
-    footer.setOnClickListener(this);
+        pollNotificationButton.setOnClickListener(this);
+        footer.setOnClickListener(this);
 
-    AzmeTracker.startActivity(getActivity(), "notification_poll");
+        AzmeTracker.startActivity(getActivity(), "notification_poll");
 
-    return view;
-  }
-
-  @Override
-  public void onClick(View view)
-  {
-    if (view == pollNotificationButton)
-    {
-      final Intent intent = new Intent(getActivity(), PollLocalActivity.class);
-      ((MainActivity) getActivity()).showInAppNotification(getString(R.string.poll_notification_title), getString(R.string.poll_notification_message), intent);
-
-      AzmeTracker.sendEvent(getActivity(), "display_poll");
+        return view;
     }
-    else if (view == footer)
-    {
-      final Intent intent = new Intent(getActivity(), HowToSendNotificationActivity.class);
-      intent.putExtra(HowToSendNotificationActivity.NOTIFICATION_TYPE_EXTRA, NotificationType.poll);
-      startActivity(intent);
+
+    @Override
+    public void onClick(View view) {
+        if (view == pollNotificationButton) {
+            final Intent intent = new Intent(getActivity(), PollLocalActivity.class);
+            ((MainActivity) getActivity()).showInAppNotification(getString(R.string.poll_notification_title), getString(R.string.poll_notification_message), intent);
+
+            AzmeTracker.sendEvent(getActivity(), "display_poll");
+        } else if (view == footer) {
+            final Intent intent = new Intent(getActivity(), HowToSendNotificationActivity.class);
+            intent.putExtra(HowToSendNotificationActivity.NOTIFICATION_TYPE_EXTRA, NotificationType.poll);
+            startActivity(intent);
+        }
     }
-  }
 
-  @Override
-  public int getMenuIdentifier()
-  {
-    return R.id.menu_poll_survey;
-  }
+    @Override
+    public int getMenuIdentifier() {
+        return R.id.menu_poll_survey;
+    }
 
-  @Override
-  public int getTitleIdentifier()
-  {
-    return R.string.menu_poll_survey_title;
-  }
+    @Override
+    public int getTitleIdentifier() {
+        return R.string.menu_poll_survey_title;
+    }
 }

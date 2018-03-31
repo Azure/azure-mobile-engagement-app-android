@@ -9,48 +9,40 @@ import com.microsoft.azure.engagement.utils.CustomTabActivityHelper;
 import com.microsoft.azure.engagement.utils.CustomTabActivityHelper.ConnectionCallback;
 
 public abstract class CustomTabsActivity
-    extends AbstractAzmeActivity
-    implements ConnectionCallback
-{
+        extends AbstractAzmeActivity
+        implements ConnectionCallback {
 
-  private CustomTabActivityHelper customTabActivityHelper;
+    private CustomTabActivityHelper customTabActivityHelper;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState)
-  {
-    super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-    customTabActivityHelper = new CustomTabActivityHelper();
-    customTabActivityHelper.setConnectionCallback(this);
-  }
+        customTabActivityHelper = new CustomTabActivityHelper();
+        customTabActivityHelper.setConnectionCallback(this);
+    }
 
-  @Override
-  protected void onStart()
-  {
-    super.onStart();
-    customTabActivityHelper.bindCustomTabsService(this);
-  }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        customTabActivityHelper.bindCustomTabsService(this);
+    }
 
-  @Override
-  protected void onStop()
-  {
-    super.onStop();
-    customTabActivityHelper.unbindCustomTabsService(this);
-  }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        customTabActivityHelper.unbindCustomTabsService(this);
+    }
 
-  @Override
-  public void onCustomTabsConnected()
-  {
-  }
+    @Override
+    public void onCustomTabsConnected() {
+    }
 
-  @Override
-  public void onCustomTabsDisconnected()
-  {
-  }
+    @Override
+    public void onCustomTabsDisconnected() {
+    }
 
-  public final CustomTabActivityHelper getCustomTabActivityHelper()
-  {
-    return customTabActivityHelper;
-  }
-
+    public final CustomTabActivityHelper getCustomTabActivityHelper() {
+        return customTabActivityHelper;
+    }
 }

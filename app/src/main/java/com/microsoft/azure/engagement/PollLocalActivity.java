@@ -15,75 +15,62 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import com.microsoft.azure.engagement.engagement.AzmeTracker;
 
 public final class PollLocalActivity
-    extends AppCompatActivity
-    implements OnClickListener, OnCheckedChangeListener
-{
+        extends AppCompatActivity
+        implements OnClickListener, OnCheckedChangeListener {
 
-  private RadioGroup firstRadioGroup;
+    private RadioGroup firstRadioGroup;
+    private RadioGroup secondRadioGroup;
+    private View cancelButton;
+    private View submitButton;
 
-  private RadioGroup secondRadioGroup;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_poll_local);
 
-  private View cancelButton;
+        firstRadioGroup = (RadioGroup) findViewById(R.id.firstRadioGroup);
+        secondRadioGroup = (RadioGroup) findViewById(R.id.secondRadioGroup);
+        cancelButton = findViewById(R.id.cancelButton);
+        submitButton = findViewById(R.id.submitButton);
 
-  private View submitButton;
+        firstRadioGroup.setOnCheckedChangeListener(this);
+        secondRadioGroup.setOnCheckedChangeListener(this);
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState)
-  {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_poll_local);
+        cancelButton.setOnClickListener(this);
+        submitButton.setOnClickListener(this);
 
-    firstRadioGroup = (RadioGroup) findViewById(R.id.firstRadioGroup);
-    secondRadioGroup = (RadioGroup) findViewById(R.id.secondRadioGroup);
-    cancelButton = findViewById(R.id.cancelButton);
-    submitButton = findViewById(R.id.submitButton);
-
-    firstRadioGroup.setOnCheckedChangeListener(this);
-    secondRadioGroup.setOnCheckedChangeListener(this);
-
-    cancelButton.setOnClickListener(this);
-    submitButton.setOnClickListener(this);
-
-    AzmeTracker.startActivity(this, "poll_detail");
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item)
-  {
-    // Handle item selection
-    switch (item.getItemId())
-    {
-    case android.R.id.home:
-      finish();
-      return true;
-    default:
-      return super.onOptionsItemSelected(item);
+        AzmeTracker.startActivity(this, "poll_detail");
     }
-  }
 
-  @Override
-  public void onClick(View view)
-  {
-    if (view == cancelButton)
-    {
-      AzmeTracker.sendEvent(this, "cancel_poll_detail");
-
-      finish();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
-    else if (view == submitButton)
-    {
-      final Intent intent = new Intent(PollLocalActivity.this, PollFinishActivity.class);
-      startActivity(intent);
-      finish();
 
-      AzmeTracker.sendEvent(this, "submit_poll_answers");
+    @Override
+    public void onClick(View view) {
+        if (view == cancelButton) {
+            AzmeTracker.sendEvent(this, "cancel_poll_detail");
+
+            finish();
+        } else if (view == submitButton) {
+            final Intent intent = new Intent(PollLocalActivity.this, PollFinishActivity.class);
+            startActivity(intent);
+            finish();
+
+            AzmeTracker.sendEvent(this, "submit_poll_answers");
+        }
     }
-  }
 
-  @Override
-  public void onCheckedChanged(RadioGroup radioGroup, int checkedId)
-  {
-    submitButton.setEnabled(firstRadioGroup.getCheckedRadioButtonId() != -1 && secondRadioGroup.getCheckedRadioButtonId() != -1);
-  }
-
+    @Override
+    public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+        submitButton.setEnabled(firstRadioGroup.getCheckedRadioButtonId() != -1 && secondRadioGroup.getCheckedRadioButtonId() != -1);
+    }
 }

@@ -20,57 +20,48 @@ import com.microsoft.azure.engagement.R;
 import com.microsoft.azure.engagement.engagement.AzmeTracker;
 
 public final class DataPushNotificationFragment
-    extends Fragment
-    implements OnClickListener, NavigationProvider
-{
+        extends Fragment
+        implements OnClickListener, NavigationProvider {
 
-  private View dataPushButton;
+    private View dataPushButton;
+    private View footer;
 
-  private View footer;
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.fragment_data_push_notification, container, false);
 
-  @Nullable
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-  {
-    final View view = inflater.inflate(R.layout.fragment_data_push_notification, container, false);
+        dataPushButton = view.findViewById(R.id.dataPushButton);
+        footer = view.findViewById(R.id.footer);
+        dataPushButton.setOnClickListener(this);
+        footer.setOnClickListener(this);
 
-    dataPushButton = view.findViewById(R.id.dataPushButton);
-    footer = view.findViewById(R.id.footer);
-    dataPushButton.setOnClickListener(this);
-    footer.setOnClickListener(this);
+        AzmeTracker.startActivity(getActivity(), "notification_datapush");
 
-    AzmeTracker.startActivity(getActivity(), "notification_datapush");
-
-    return view;
-  }
-
-  @Override
-  public void onClick(View view)
-  {
-    if (view == dataPushButton)
-    {
-      final Intent intent = new Intent(getActivity(), ProductDiscountActivity.class);
-      startActivity(intent);
-
-      AzmeTracker.sendEvent(getActivity(), "launch_data_push");
+        return view;
     }
-    else if (view == footer)
-    {
-      final Intent intent = new Intent(getActivity(), HowToSendNotificationActivity.class);
-      intent.putExtra(HowToSendNotificationActivity.NOTIFICATION_TYPE_EXTRA, NotificationType.dataPushNotification);
-      startActivity(intent);
+
+    @Override
+    public void onClick(View view) {
+        if (view == dataPushButton) {
+            final Intent intent = new Intent(getActivity(), ProductDiscountActivity.class);
+            startActivity(intent);
+
+            AzmeTracker.sendEvent(getActivity(), "launch_data_push");
+        } else if (view == footer) {
+            final Intent intent = new Intent(getActivity(), HowToSendNotificationActivity.class);
+            intent.putExtra(HowToSendNotificationActivity.NOTIFICATION_TYPE_EXTRA, NotificationType.dataPushNotification);
+            startActivity(intent);
+        }
     }
-  }
 
-  @Override
-  public int getMenuIdentifier()
-  {
-    return R.id.menu_poll_survey;
-  }
+    @Override
+    public int getMenuIdentifier() {
+        return R.id.menu_poll_survey;
+    }
 
-  @Override
-  public int getTitleIdentifier()
-  {
-    return R.string.menu_poll_survey_title;
-  }
+    @Override
+    public int getTitleIdentifier() {
+        return R.string.menu_poll_survey_title;
+    }
 }

@@ -12,41 +12,36 @@ import com.microsoft.azure.engagement.engagement.AzmeTracker;
 import com.microsoft.azure.engagement.reach.activity.EngagementPollActivity;
 
 public final class PollEngagementActivity
-    extends EngagementPollActivity
-    implements OnClickListener
-{
+        extends EngagementPollActivity
+        implements OnClickListener {
 
-  private View closeButton;
+    private View closeButton;
 
-  @Override
-  public void onCreate(Bundle savedInstanceState)
-  {
-    super.onCreate(savedInstanceState);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-    AzmeTracker.startActivity(this, "poll_detail");
+        AzmeTracker.startActivity(this, "poll_detail");
 
-    closeButton = findViewById(R.id.exit);
-    closeButton.setOnClickListener(this);
-  }
-
-  @Override
-  protected void onAction()
-  {
-    super.onAction();
-    final Intent intent = new Intent(PollEngagementActivity.this, PollFinishActivity.class);
-    startActivity(intent);
-
-    AzmeTracker.sendEvent(this, "submit_poll_answers");
-  }
-
-  @Override
-  public void onClick(View view)
-  {
-    if (view == closeButton)
-    {
-      AzmeTracker.sendEvent(this, "cancel_poll_detail");
-
-      finish();
+        closeButton = findViewById(R.id.exit);
+        closeButton.setOnClickListener(this);
     }
-  }
+
+    @Override
+    protected void onAction() {
+        super.onAction();
+        final Intent intent = new Intent(PollEngagementActivity.this, PollFinishActivity.class);
+        startActivity(intent);
+
+        AzmeTracker.sendEvent(this, "submit_poll_answers");
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view == closeButton) {
+            AzmeTracker.sendEvent(this, "cancel_poll_detail");
+
+            finish();
+        }
+    }
 }

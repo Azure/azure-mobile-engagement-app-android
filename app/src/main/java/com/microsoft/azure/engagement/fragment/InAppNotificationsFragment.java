@@ -22,72 +22,61 @@ import com.microsoft.azure.engagement.ReboundActivity;
 import com.microsoft.azure.engagement.engagement.AzmeTracker;
 
 public final class InAppNotificationsFragment
-    extends Fragment
-    implements OnClickListener, NavigationProvider
-{
+        extends Fragment
+        implements OnClickListener, NavigationProvider {
 
-  private View notificationOnlyButton;
+    private View notificationOnlyButton;
 
-  private View announcementButton;
+    private View announcementButton;
 
-  private View footer;
+    private View footer;
 
-  @Nullable
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-  {
-    final View view = inflater.inflate(R.layout.fragment_in_app_notifications, container, false);
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.fragment_in_app_notifications, container, false);
 
-    notificationOnlyButton = view.findViewById(R.id.notificationOnlyButton);
-    announcementButton = view.findViewById(R.id.announcementButton);
-    footer = view.findViewById(R.id.footer);
+        notificationOnlyButton = view.findViewById(R.id.notificationOnlyButton);
+        announcementButton = view.findViewById(R.id.announcementButton);
+        footer = view.findViewById(R.id.footer);
 
-    notificationOnlyButton.setOnClickListener(this);
-    announcementButton.setOnClickListener(this);
-    footer.setOnClickListener(this);
+        notificationOnlyButton.setOnClickListener(this);
+        announcementButton.setOnClickListener(this);
+        footer.setOnClickListener(this);
 
-    AzmeTracker.startActivity(getActivity(), "notification_in_app");
+        AzmeTracker.startActivity(getActivity(), "notification_in_app");
 
-    return view;
-  }
-
-  @Override
-  public void onClick(View view)
-  {
-    if (view == notificationOnlyButton)
-    {
-      final Intent intent = new Intent(Intent.ACTION_VIEW);
-      intent.setData(Uri.parse(getString(R.string.deeplink_recent_product_updates)));
-      ((MainActivity) getActivity()).showInAppNotification(getString(R.string.in_app_notifications_notification_title), getString(R.string.in_app_notifications_notification_message), intent);
-
-      AzmeTracker.sendEvent(getActivity(), "display_in_app_notification_only");
+        return view;
     }
-    else if (view == announcementButton)
-    {
-      final Intent intent = new Intent(getActivity(), ReboundActivity.class);
-      intent.putExtra(ReboundActivity.ACTION_URL_EXTRA, getString(R.string.deeplink_recent_product_updates));
-      ((MainActivity) getActivity()).showInAppNotification(getString(R.string.in_app_notifications_notification_title), getString(R.string.in_app_notifications_notification_message), intent);
 
-      AzmeTracker.sendEvent(getActivity(), "display_in_app_announcement");
+    @Override
+    public void onClick(View view) {
+        if (view == notificationOnlyButton) {
+            final Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(getString(R.string.deeplink_recent_product_updates)));
+            ((MainActivity) getActivity()).showInAppNotification(getString(R.string.in_app_notifications_notification_title), getString(R.string.in_app_notifications_notification_message), intent);
+
+            AzmeTracker.sendEvent(getActivity(), "display_in_app_notification_only");
+        } else if (view == announcementButton) {
+            final Intent intent = new Intent(getActivity(), ReboundActivity.class);
+            intent.putExtra(ReboundActivity.ACTION_URL_EXTRA, getString(R.string.deeplink_recent_product_updates));
+            ((MainActivity) getActivity()).showInAppNotification(getString(R.string.in_app_notifications_notification_title), getString(R.string.in_app_notifications_notification_message), intent);
+
+            AzmeTracker.sendEvent(getActivity(), "display_in_app_announcement");
+        } else if (view == footer) {
+            final Intent intent = new Intent(getActivity(), HowToSendNotificationActivity.class);
+            intent.putExtra(HowToSendNotificationActivity.NOTIFICATION_TYPE_EXTRA, NotificationType.inApp);
+            startActivity(intent);
+        }
     }
-    else if (view == footer)
-    {
-      final Intent intent = new Intent(getActivity(), HowToSendNotificationActivity.class);
-      intent.putExtra(HowToSendNotificationActivity.NOTIFICATION_TYPE_EXTRA, NotificationType.inApp);
-      startActivity(intent);
+
+    @Override
+    public int getMenuIdentifier() {
+        return R.id.menu_in_app;
     }
-  }
 
-  @Override
-  public int getMenuIdentifier()
-  {
-    return R.id.menu_in_app;
-  }
-
-  @Override
-  public int getTitleIdentifier()
-  {
-    return R.string.menu_in_app_title;
-  }
-
+    @Override
+    public int getTitleIdentifier() {
+        return R.string.menu_in_app_title;
+    }
 }

@@ -12,20 +12,17 @@ import com.microsoft.azure.engagement.reach.EngagementReachAgent;
  * The entry point of the application.
  */
 public final class AzmeApplication
-    extends EngagementApplication
-{
+        extends EngagementApplication {
 
-  @Override
-  public void onApplicationProcessCreate()
-  {
+    @Override
+    public void onApplicationProcessCreate() {
 
-    // Specify your Engagement connection string
-    final EngagementConfiguration engagementConfiguration = new EngagementConfiguration();
-    engagementConfiguration.setConnectionString("Endpoint=XXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-    EngagementAgent.getInstance(this).init(engagementConfiguration);
+        // Specify your Engagement connection string
+        final EngagementConfiguration engagementConfiguration = new EngagementConfiguration();
+        engagementConfiguration.setConnectionString("Endpoint=XXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+        EngagementAgent.getInstance(this).init(engagementConfiguration);
 
-    final EngagementReachAgent reachAgent = EngagementReachAgent.getInstance(this);
-    reachAgent.registerNotifier(new AzmeNotifier(this), Intent.CATEGORY_DEFAULT);
-  }
-
+        final EngagementReachAgent reachAgent = EngagementReachAgent.getInstance(this);
+        reachAgent.registerNotifier(new AzmeNotifier(this), Intent.CATEGORY_DEFAULT);
+    }
 }

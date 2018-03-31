@@ -10,36 +10,29 @@ import android.view.View.OnClickListener;
 import com.microsoft.azure.engagement.engagement.AzmeTracker;
 
 public final class PollFinishActivity
-    extends AbstractAzmeActivity
-    implements OnClickListener
-{
+        extends AbstractAzmeActivity
+        implements OnClickListener {
 
-  private View closeButton;
+    private View closeButton;
 
-  @Override
-  public int getLayoutResourceId()
-  {
-    return R.layout.activity_poll_finish;
-  }
-
-  @Override
-  protected void onCreate(Bundle savedInstanceState)
-  {
-    super.onCreate(savedInstanceState);
-
-    closeButton = findViewById(R.id.closeButton);
-    closeButton.setOnClickListener(this);
-  }
-
-  @Override
-  public void onClick(View view)
-  {
-    if (view == closeButton)
-    {
-      AzmeTracker.sendEvent(this, "close_poll_thanks");
-
-      finish();
+    @Override
+    public int getLayoutResourceId() {
+        return R.layout.activity_poll_finish;
     }
-  }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        closeButton = findViewById(R.id.closeButton);
+        closeButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view == closeButton) {
+            AzmeTracker.sendEvent(this, "close_poll_thanks");
+            finish();
+        }
+    }
 }
